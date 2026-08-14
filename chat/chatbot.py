@@ -7,13 +7,17 @@ import os
 import json
 from dotenv import load_dotenv
 from groq import Groq
-from tools import tools
-from prompts import SYSTEM_PROMPT
-from recipes_client import search_recipes_in_laravel
+
+from chat.tools import tools
+from chat.chat_prompts import SYSTEM_PROMPT
+from chat.recipes_client import search_recipes_in_laravel
 
 load_dotenv()
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+api_key = os.getenv("GROQ_API_KEY")
+client = Groq(api_key = api_key)
+
+CHAT_MODEL="llama-3.3-70b-versatile"
 
 def process_user_message(user_message: str, history: list = None):
     """
@@ -32,7 +36,7 @@ def process_user_message(user_message: str, history: list = None):
     messages.append({"role": "user", "content": user_message})
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=CHAT_MODEL,
         messages=messages,
         tools=tools,
         tool_choice="auto"

@@ -6,8 +6,9 @@ defining the endpoints, and handling incoming HTTP requests from the frontend or
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-from chatbot import process_user_message
 
+from chat.chatbot import process_user_message
+from nutrition_facts.calculation import analyze_recipe
 app = FastAPI()
 
 class ChatMessage(BaseModel):
@@ -18,7 +19,15 @@ class UserRequest(BaseModel):
     message: str
     history: Optional[List[ChatMessage]] = []
 
+class IngredientItem(BaseModel):
+    name: str
+    quantity: float
+    unit: str   # "g", "cup", "tbsp", "tsp", "count", ...
 
+
+class NutritionRequest(BaseModel):
+    ingredients: List[IngredientItem]
+    instructions: str
 
 # Simulation of laravel backend search API
 
@@ -57,6 +66,16 @@ def mock_laravel_recipe_search(filters: Dict[str, Any]):
 def handle_ai_chat(request: UserRequest):
     try:
         result = process_user_message(request.message, request.history)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+#AI nutrition calculation endpoint
+@app.post("/api/ai/calculate-nutrition")
+def handle_nutrition_calculation(request: NutritionRequest):
+    try:
+        ingredients = [item.model_dump() for item in request.ingredients]
+        result = analyze_recipe(ingredients, request.instructions)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
