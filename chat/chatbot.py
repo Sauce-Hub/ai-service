@@ -74,6 +74,10 @@ def process_user_message(user_message: str, history: list = None):
                 )
                 
                 final_answer = second_response.choices[0].message.content
+                if not final_answer:
+                    final_answer = ("I found some results, but I couldn't find a great match "
+                                    "for exactly what you're looking for. Could you try "
+                                    "rephrasing your request or adjusting your filters?")
             except Exception as e:
                 final_answer = (
                     "I found some results, but I couldn't find a great match "
@@ -83,6 +87,8 @@ def process_user_message(user_message: str, history: list = None):
  
             return {
                 "status": "success",
+                "filters used":function_args,
+                "recipes":db_results,
                 "response": final_answer
             }
  
