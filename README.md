@@ -41,7 +41,7 @@ Fallback: Automatically switches to backup models if errors or rate limits occur
 
 ## Repo Structure : 
 - We have three main parts in this repo :
-- 1. chat folder : for handling the chatting logic, sending filters and delivering the recipes details.
+  1. chat folder : for handling the chatting logic, sending filters and delivering the recipes details.
   2. Nutrition calculation folder : for calculating the nutrition facts for each added recipe.
   3. main file : for running the project.
   4. model_gateway : for calling the models and fallback system. 
