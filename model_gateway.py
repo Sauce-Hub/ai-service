@@ -89,7 +89,7 @@ def call_model(
     The single entry point that chatbot.py and calculation.py call
     """
 
-    kwargs = {"messages": messages, "temperature": temperature}
+    kwargs = {"messages": messages, "temperature": temperature }
     if tools:
         kwargs["tools"] = tools
         kwargs["tool_choice"] = tool_choice or "auto"
