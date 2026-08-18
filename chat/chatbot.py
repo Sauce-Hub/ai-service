@@ -82,14 +82,11 @@ def process_user_message(user_message: str, history: list = None):
                 )
  
             return {
-                "status": "success",
-                "tool used": function_name,
-                "filters used": function_args,
+                "status": "suc
                 "response": final_answer
             }
  
     return {
         "status": "success",
-        "type": "general call",
         "response": response_message.content
     }
