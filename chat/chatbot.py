@@ -82,7 +82,7 @@ def process_user_message(user_message: str, history: list = None):
                 )
  
             return {
-                "status": "suc
+                "status": "success",
                 "response": final_answer
             }
  
