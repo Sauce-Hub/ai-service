@@ -87,8 +87,6 @@ def process_user_message(user_message: str, history: list = None):
  
             return {
                 "status": "success",
-                "filters used":function_args,
-                "recipes":db_results,
                 "response": final_answer
             }
  

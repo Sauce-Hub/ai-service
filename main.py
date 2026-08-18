@@ -30,48 +30,6 @@ class NutritionRequest(BaseModel):
     ingredients: List[IngredientItem]
     instructions: str
 
-# Simulation of laravel backend search API
-
-@app.post("/api/recipes/search")
-def mock_laravel_recipe_search(filters: Dict[str, Any]):
-    print("--- [Laravel Mock API] Received Filters from AI:", filters)
-    mock_recipes = [
-            {
-                "receipt_id": 1,
-                "name": "Pasta",
-                "caption": "Quick and delicious pasta",
-                "category": "DINNER",
-                "estimated_time_min": 20,
-                "calories": 300,
-                "fats": 15,
-                "carbs": 70,
-                "protein": 20,
-                "timestamp": "2026-08-10T18:00:00Z",
-                "user": {
-                    "user_id": 1,
-                    "name": "Ahmed"
-                },
-                "ingredients": [
-                    {
-                        "id": 1,
-                        "name": "Pasta",
-                        "quantity": 200,
-                        "unit": "g",
-                        "isAssigned": False
-                    },
-                    {
-                        "id": 2,
-                        "name": "Tomato Sauce",
-                        "quantity": 100,
-                        "unit": "g",
-                        "isAssigned": False
-                    }
-                ],
-                "instructions": "1. Boil water in a large pot with a pinch of salt.    2. Add 200g of pasta and cook for 10 to 12 minutes until tender.    3. Drain the pasta and mix it thoroughly with warm tomato sauce.    4. Serve hot and enjoy your quick dinner."
-            }
-        ]
-    return mock_recipes
-
 # AI chat endpoint 
 
 @app.post("/api/ai/chat")
