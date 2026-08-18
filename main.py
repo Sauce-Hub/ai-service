@@ -32,7 +32,7 @@ class NutritionRequest(BaseModel):
 
 # Simulation of laravel backend search API
 
-@app.get("/api/recipes/search")
+@app.post("/api/recipes/search")
 def mock_laravel_recipe_search(filters: Dict[str, Any]):
     print("--- [Laravel Mock API] Received Filters from AI:", filters)
     mock_recipes = [
