@@ -13,13 +13,15 @@ from dotenv import load_dotenv
 from groq import Groq
 
 from nutrition_facts.nutri_prompts import NUTRITION_SYSTEM_PROMPT
+from model_gateway import call_model
 
 load_dotenv()
+
 api_key=os.getenv("GROQ_API_KEY")
 client = Groq(api_key=api_key)
 
 NUTRITION_MODEL = "openai/gpt-oss-120b"
-
+OPENROUTER_FALLBACK_MODEL = "openai/gpt-oss-120b"
 
 def analyze_recipe(ingredients: list[dict], instructions: str) -> dict:
     """
@@ -32,10 +34,10 @@ def analyze_recipe(ingredients: list[dict], instructions: str) -> dict:
    returns dict with :
     {
         "calories": ...,
-        "protein_g": ...,
-        "carbs_g": ...,
-        "fat_g": ...,
-        "estimated_time_minutes": ...   
+        "protein": ...,
+        "carbs": ...,
+        "fat": ...,
+        "estimated_time": ...   
     }
     """
 
@@ -60,8 +62,8 @@ def analyze_recipe(ingredients: list[dict], instructions: str) -> dict:
 
     raw_content = response.choices[0].message.content
     result = _parse_model_output(raw_content)
-    result["estimated_time_minutes"] = _normalize_time(
-        result.get("estimated_time_minutes")
+    result["estimated_time"] = _normalize_time(
+        result.get("estimated_time")
     )
 
     return result
@@ -86,7 +88,7 @@ def _parse_model_output(raw_content: str) -> dict:
             "protein_g": None,
             "carbs_g": None,
             "fat_g": None,
-            "estimated_time_minutes": None,
+            "estimated_time": None,
             "error": "failed to parse model output",
         }
 

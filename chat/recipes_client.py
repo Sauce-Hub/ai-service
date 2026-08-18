@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Mock function for the recipe search service in laravel
-LARAVEL_SEARCH_URL = os.getenv("LARAVEL_SEARCH_URL", "http://127.0.0.1:8000/api/recipes/search")
+LARAVEL_SEARCH_URL = os.getenv("LARAVEL_SEARCH_URL")
 
 def search_recipes_in_laravel(filters: dict) -> list:
     """

@@ -11,13 +11,12 @@ from groq import Groq
 from chat.tools import tools
 from chat.chat_prompts import SYSTEM_PROMPT
 from chat.recipes_client import search_recipes_in_laravel
+from model_gateway import call_model
 
 load_dotenv()
 
-api_key = os.getenv("GROQ_API_KEY")
-client = Groq(api_key = api_key)
-
-CHAT_MODEL="llama-3.3-70b-versatile"
+CHAT_MODEL = "openai/gpt-oss-120b"
+OPENROUTER_FALLBACK_MODEL = "openai/gpt-oss-120b"
 
 def process_user_message(user_message: str, history: list = None):
     """
@@ -35,13 +34,14 @@ def process_user_message(user_message: str, history: list = None):
     # Adding the user current prompt to the message
     messages.append({"role": "user", "content": user_message})
 
-    response = client.chat.completions.create(
-        model=CHAT_MODEL,
+    response = call_model(
         messages=messages,
+        groq_model=CHAT_MODEL,
+        openrouter_model=OPENROUTER_FALLBACK_MODEL,
         tools=tools,
         tool_choice="auto"
     )
-
+    
     response_message = response.choices[0].message
 
     if response_message.tool_calls:
@@ -65,23 +65,31 @@ def process_user_message(user_message: str, history: list = None):
                 "content": json.dumps(db_results)
             })
 
-            second_response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=messages
-            )
-            
-            final_answer = second_response.choices[0].message.content
-
+            try:
+                second_response = call_model(
+                   messages=messages,
+                    groq_model=CHAT_MODEL,
+                    openrouter_model=OPENROUTER_FALLBACK_MODEL,
+                    tool_choice="none",
+                )
+                
+                final_answer = second_response.choices[0].message.content
+            except Exception as e:
+                final_answer = (
+                    "I found some results, but I couldn't find a great match "
+                    "for exactly what you're looking for. Could you try "
+                    "rephrasing your request or adjusting your filters?"
+                )
+ 
             return {
                 "status": "success",
-                "action": "recipe_search",
-                "filters_used": function_args,
-                "database_results": db_results,
+                "tool used": function_name,
+                "filters used": function_args,
                 "response": final_answer
             }
-
+ 
     return {
         "status": "success",
-        "action": "general_chat",
+        "type": "general call",
         "response": response_message.content
     }

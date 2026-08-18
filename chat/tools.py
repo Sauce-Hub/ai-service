@@ -32,7 +32,7 @@ tools = [
                     },
                     "category": {
                         "type": ["string", "null"],
-                        "enum": ["breakfast", "lunch", "dinner", None],
+                        "enum": ["BREAKFAST", "LUNCH", "DINNER","SWEETS","HOTDRINK","COLDDRINK", None],
                         "description": "The category of the meal matching the database categories."
                     },
                     "max_estimated_time": {
