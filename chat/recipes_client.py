@@ -17,7 +17,7 @@ def search_recipes_in_laravel(filters: dict) -> list:
         "X-API-KEY": LARAVEL_API_KEY
     }
     try:
-        response = requests.post(LARAVEL_SEARCH_URL, json=filters, headers=headers, timeout=10)
+        response = requests.post(LARAVEL_SEARCH_URL, json=filters, headers=headers, timeout=60)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
